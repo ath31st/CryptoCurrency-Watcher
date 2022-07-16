@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CurrencyRepository extends CrudRepository<Currency, Long> {
     Optional<Currency> findById(Long id);
+    Optional<Currency> findBySymbolIgnoreCase(String symbol);
 }

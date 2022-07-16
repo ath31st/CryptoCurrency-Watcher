@@ -6,6 +6,8 @@ import ru.project.watcher.entity.User;
 import ru.project.watcher.service.CurrencyService;
 import ru.project.watcher.service.UserService;
 
+import javax.validation.Valid;
+
 @RestController
 public class RegisterController {
     private final CurrencyService currencyService;
@@ -17,7 +19,7 @@ public class RegisterController {
     }
 
     @PostMapping("/notify")
-    public ResponseEntity<User> notify(@RequestBody User user) {
+    public ResponseEntity<User> notify(@RequestBody @Valid User user) {
         return userService.saveUser(user);
     }
 

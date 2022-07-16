@@ -4,6 +4,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -22,4 +23,16 @@ public class User {
     @NotNull
     private String symbol;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) && Objects.equals(symbol, user.symbol);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, symbol);
+    }
 }
