@@ -1,5 +1,6 @@
 package ru.project.watcher.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,12 +17,16 @@ public class User {
     @Id
     @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false)
+    @JsonIgnore
     private Long id;
     @NotBlank
     @NotNull
     private String username;
     @NotNull
     private String symbol;
+
+    @Transient
+    private Currency currency;
 
     @Override
     public boolean equals(Object o) {
