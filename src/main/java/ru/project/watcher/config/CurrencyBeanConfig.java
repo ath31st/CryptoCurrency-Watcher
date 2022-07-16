@@ -13,27 +13,27 @@ public class CurrencyBeanConfig {
     public CurrencyBeanConfig(CurrencyRepository currencyRepository) {
         this.currencyRepository = currencyRepository;
     }
-    @Bean
-    void setCurrency(){
-        Currency currencyBTC = new Currency();
-        currencyBTC.setId(90L);
-        currencyBTC.setSymbol("BTC");
-        currencyBTC.setPrice_usd(0);
-
-        Currency currencyETH = new Currency();
-        currencyBTC.setId(80L);
-        currencyBTC.setSymbol("ETH");
-        currencyBTC.setPrice_usd(0);
-
-        Currency currencySOL = new Currency();
-        currencySOL.setId(48543L);
-        currencySOL.setSymbol("SOL");
-        currencySOL.setPrice_usd(0);
-
-        currencyRepository.save(currencyBTC);
-        currencyRepository.save(currencyETH);
-        currencyRepository.save(currencySOL);
-    }
+//    @Bean
+//    void setCurrency(){
+//        Currency currencyBTC = new Currency();
+//        currencyBTC.setId(90L);
+//        currencyBTC.setSymbol("BTC");
+//        currencyBTC.setPrice_usd(0);
+//
+//        Currency currencyETH = new Currency();
+//        currencyBTC.setId(80L);
+//        currencyBTC.setSymbol("ETH");
+//        currencyBTC.setPrice_usd(0);
+//
+//        Currency currencySOL = new Currency();
+//        currencySOL.setId(48543L);
+//        currencySOL.setSymbol("SOL");
+//        currencySOL.setPrice_usd(0);
+//
+//        currencyRepository.save(currencyBTC);
+//        currencyRepository.save(currencyETH);
+//        currencyRepository.save(currencySOL);
+//    }
 
 
 

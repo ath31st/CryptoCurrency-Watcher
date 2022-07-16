@@ -6,5 +6,5 @@ import ru.project.watcher.entity.User;
 import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User,String> {
-    Optional<User> findUserByUsernameWithinIgnoreCase(String username);
+    Optional<User> findUserByUsernameIgnoreCase(String username);
 }
