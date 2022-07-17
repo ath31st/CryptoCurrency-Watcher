@@ -27,7 +27,6 @@ public class CurrencyService {
     private String currenciesId;
     private final String URL = "https://api.coinlore.net/api/ticker/?id=";
 
-
     public CurrencyService(CurrencyRepository currencyRepository, UserRepository userRepository) {
         this.currencyRepository = currencyRepository;
         this.userRepository = userRepository;
