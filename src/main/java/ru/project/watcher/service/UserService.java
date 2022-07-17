@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import ru.project.watcher.entity.Currency;
 import ru.project.watcher.entity.User;
 import ru.project.watcher.repository.CurrencyRepository;
 import ru.project.watcher.repository.UserRepository;
-import ru.project.watcher.util.Symbols;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -23,6 +23,7 @@ public class UserService {
     }
 
     public ResponseEntity<User> saveUser(User user) {
+        double defaultRate = 0;
         if (userRepository.findUserByUsernameIgnoreCase(user.getUsername()).isPresent()) {
             User tmpUser = userRepository.findUserByUsernameIgnoreCase(user.getUsername()).get();
 
@@ -31,18 +32,21 @@ public class UserService {
 
             tmpUser.setSymbol(user.getSymbol());
             tmpUser.setCurrency(currencyRepository.findBySymbolIgnoreCase(tmpUser.getSymbol()).get());
+            tmpUser.setExchangeRate(defaultRate);
             userRepository.save(tmpUser);
         } else {
             checkExistingSymbol(user.getSymbol());
 
             user.setCurrency(currencyRepository.findBySymbolIgnoreCase(user.getSymbol()).get());
+            user.setExchangeRate(defaultRate);
             userRepository.save(user);
         }
         return ResponseEntity.ok(user);
     }
 
     private void checkExistingSymbol(String symbol) {
-        if (Arrays.stream(Symbols.values()).noneMatch(symbols -> symbols.name().equals(symbol))) {
+        List<Currency> currencies = currencyRepository.findAll();
+        if (currencies.stream().noneMatch(currency -> currency.getSymbol().equals(symbol))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "this symbol not found!");
         }
     }

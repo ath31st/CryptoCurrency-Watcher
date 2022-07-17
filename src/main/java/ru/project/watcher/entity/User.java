@@ -2,6 +2,7 @@ package ru.project.watcher.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name="\"user\"")
+@Table(name = "\"user\"")
 public class User {
     @Id
     @GeneratedValue
@@ -24,6 +25,8 @@ public class User {
     private String username;
     @NotNull
     private String symbol;
+    @JsonIgnore
+    private double exchangeRate;
 
     private Currency currency;
 

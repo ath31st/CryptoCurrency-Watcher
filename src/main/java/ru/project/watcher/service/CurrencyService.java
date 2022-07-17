@@ -1,5 +1,6 @@
 package ru.project.watcher.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,9 @@ import java.util.List;
 public class CurrencyService {
     private final CurrencyRepository currencyRepository;
     private final UserRepository userRepository;
-    final String url = "https://api.coinlore.net/api/ticker/?id=90,80,48543";
+    @Value("${currencies.id}")
+    private String currenciesId;
+    private final String URL = "https://api.coinlore.net/api/ticker/?id=";
 
     public CurrencyService(CurrencyRepository currencyRepository, UserRepository userRepository) {
         this.currencyRepository = currencyRepository;
@@ -40,7 +43,7 @@ public class CurrencyService {
         Currency[] currencies = null;
         final RestTemplate restTemplate = new RestTemplate();
         try {
-            currencies = restTemplate.getForObject(url, Currency[].class);
+            currencies = restTemplate.getForObject(URL + currenciesId, Currency[].class);
         } catch (RestClientException e) {
             e.printStackTrace();
         }
@@ -52,8 +55,7 @@ public class CurrencyService {
     }
 
     public void updateCurrenciesInDb(List<Currency> currencies) {
-        List<Currency> tmpCurrencies = new ArrayList<>();
-        currencyRepository.findAll().iterator().forEachRemaining(tmpCurrencies::add);
+        List<Currency> tmpCurrencies = currencyRepository.findAll();
         for (Currency currency : currencies) {
             if (!tmpCurrencies.contains(currency)) {
                 currencyRepository.save(currency);
@@ -71,8 +73,9 @@ public class CurrencyService {
                     .filter(currency -> user.getSymbol().equals(currency.getSymbol()))
                     .findFirst()
                     .get();
-            double result = moreThen1percent(user.getCurrency(), currentCurrency);
+            double result = moreThen01percent(user.getCurrency(), currentCurrency);
             printResult(result, user, currentCurrency);
+            updateExchangeRateForUser(user,result);
         }
     }
 
@@ -86,18 +89,22 @@ public class CurrencyService {
         return currencies;
     }
 
-    private double moreThen1percent(Currency userCurrency, Currency currentCurrency) {
+    private double moreThen01percent(Currency userCurrency, Currency currentCurrency) {
         return ((userCurrency.getPrice_usd() / currentCurrency.getPrice_usd()) - 1) * 100;
     }
 
     private void printResult(double result, User user, Currency currency) {
-        if (result > 0 & result >= 0.01) {
+        if (result >= 0.1 & user.getExchangeRate() != result) {
             System.out.printf("Result for %s. %s exchange rate has changed by -%.2f%%\n", user.getUsername(), currency.getSymbol(), Math.abs(result));
-        } else if (result < 0 & result <= 0.01) {
+        } else if (result <= 0.1 & user.getExchangeRate() != result) {
             System.out.printf("Result for %s. %s exchange rate has changed by +%.2f%%\n", user.getUsername(), currency.getSymbol(), Math.abs(result));
         } else {
-            System.out.printf("Result for %s. %s exchange rate has not changed\n", user.getUsername(), currency.getSymbol());
+           // System.out.printf("Result for %s. %s exchange rate has not changed\n", user.getUsername(), currency.getSymbol());
         }
+    }
+    private void updateExchangeRateForUser(User user, double result){
+        user.setExchangeRate(result);
+        userRepository.save(user);
     }
 
 
