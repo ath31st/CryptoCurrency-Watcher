@@ -34,6 +34,7 @@ public class UserService {
             userRepository.save(tmpUser);
         } else {
             checkExistingSymbol(user.getSymbol());
+
             user.setCurrency(currencyRepository.findBySymbolIgnoreCase(user.getSymbol()).get());
             userRepository.save(user);
         }

@@ -25,7 +25,6 @@ public class User {
     @NotNull
     private String symbol;
 
-    @Transient
     private Currency currency;
 
     @Override

@@ -18,9 +18,7 @@ public class ScheduledUpdateCurrency {
 
     @Scheduled(fixedRate = 20000)
     public void scheduleFixedRateTask() {
-        System.out.println(
-                "Fixed rate task - " + System.currentTimeMillis() / 1000);
-
         currencyService.updateCurrenciesInDb(currencyService.getCurrenciesFromApi());
+        currencyService.checkChangeCurrencyPrice();
     }
 }
