@@ -1,5 +1,7 @@
 package ru.project.watcher.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @Service
 public class CurrencyService {
+    private final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
     private final CurrencyRepository currencyRepository;
     private final UserRepository userRepository;
     @Value("${currencies.id}")
@@ -59,7 +62,7 @@ public class CurrencyService {
         for (Currency currency : currencies) {
             if (!tmpCurrencies.contains(currency)) {
                 currencyRepository.save(currency);
-                System.out.println(currency + " updated!");
+                logger.atInfo().addArgument(currency).log("{} updated!");
             }
         }
     }
@@ -75,7 +78,7 @@ public class CurrencyService {
                     .get();
             double result = moreThen01percent(user.getCurrency(), currentCurrency);
             printResult(result, user, currentCurrency);
-            updateExchangeRateForUser(user,result);
+            updateExchangeRateForUser(user, result);
         }
     }
 
@@ -95,17 +98,27 @@ public class CurrencyService {
 
     private void printResult(double result, User user, Currency currency) {
         if (result >= 0.1 & user.getExchangeRate() != result) {
-            System.out.printf("Result for %s. %s exchange rate has changed by -%.2f%%\n", user.getUsername(), currency.getSymbol(), Math.abs(result));
+            logger.atWarn()
+                    .addArgument(user.getUsername())
+                    .addArgument(currency.getSymbol())
+                    .addArgument(String.format("%.2f", Math.abs(result)))
+                    .log("Result for {}. {} exchange rate has changed by -{}%");
+            // System.out.printf("Result for %s. %s exchange rate has changed by -%.2f%%\n", user.getUsername(), currency.getSymbol(), Math.abs(result));
         } else if (result <= 0.1 & user.getExchangeRate() != result) {
-            System.out.printf("Result for %s. %s exchange rate has changed by +%.2f%%\n", user.getUsername(), currency.getSymbol(), Math.abs(result));
+            logger.atWarn()
+                    .addArgument(user.getUsername())
+                    .addArgument(currency.getSymbol())
+                    .addArgument(String.format("%.2f", Math.abs(result)))
+                    .log("Result for {}. {} exchange rate has changed by +{}%");
+            //  System.out.printf("Result for %s. %s exchange rate has changed by +%.2f%%\n", user.getUsername(), currency.getSymbol(), Math.abs(result));
         } else {
-           // System.out.printf("Result for %s. %s exchange rate has not changed\n", user.getUsername(), currency.getSymbol());
+            // System.out.printf("Result for %s. %s exchange rate has not changed\n", user.getUsername(), currency.getSymbol());
         }
     }
-    private void updateExchangeRateForUser(User user, double result){
+
+    private void updateExchangeRateForUser(User user, double result) {
         user.setExchangeRate(result);
         userRepository.save(user);
     }
-
 
 }
