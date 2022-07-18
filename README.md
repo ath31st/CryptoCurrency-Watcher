@@ -22,3 +22,19 @@
 - Раз в минуту актуальные цены для доступных криптовалют запрашиваются с внешнего источника CoinLore и сохраняются в базу данных.
 - Чтобы получить актуальные цены по коду криптовалюты, используйте [API Crypto API | CoinLore](https://www.coinlore.com/ru/cryptocurrency-data-api)
 - Когда пользователь запрашивает актуальную цену для указанной криптовалюты - данные должны быть получены из базы данных.
+
+### Результаты
+
+- Задание выполнено в полном объеме
+- В ходе написания проекта использована база данных H2
+- Для логгирования требуемых событий использован логгер slf4j simple
+- В требовании указанно 3 криптовалюты, при этом доступно расширение списка валют путем добавления id в application.property в поле currencies.id
+- Регистрация пользователя доступна по эндпоинту (POST-метод) `/notify`, данные принимаются в формате `{"username":"Ivan","symbol":"ETH"}`
+- Запрос актуальной стоимости криптовалюты для конкретного пользователя доступен по эндпоинту (GET-метод) `/notify/{username}`
+- Добавлен докерфайл, позволяющий собрать проект в докер образ и запустить его в контейнере.
+- Результаты выполнения выглядят так:<br/>
+>2022-07-18 12:02:19:541 +0300 [scheduling-1] INFO ru.project.watcher.service.CurrencyService - Currency{id=90, symbol='BTC', priceUsd=22263.9} updated!<br/>
+>2022-07-18 12:02:19:545 +0300 [scheduling-1] INFO ru.project.watcher.service.CurrencyService - Currency{id=80, symbol='ETH', priceUsd=1475.26} updated!<br/>
+>2022-07-18 12:02:19:550 +0300 [scheduling-1] INFO ru.project.watcher.service.CurrencyService - Currency{id=48543, symbol='SOL', priceUsd=42.03} updated!<br/>
+>2022-07-18 12:02:19:555 +0300 [scheduling-1] WARN ru.project.watcher.service.CurrencyService - Result for Petr. BTC exchange rate has changed by +0,18%<br/>
+>2022-07-18 12:02:19:561 +0300 [scheduling-1] WARN ru.project.watcher.service.CurrencyService - Result for Ivan. ETH exchange rate has changed by +1,47%<br/>

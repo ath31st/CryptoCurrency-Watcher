@@ -16,7 +16,7 @@ public class ScheduledUpdateCurrency {
         this.currencyService = currencyService;
     }
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = 60000)
     public void scheduleFixedRateTask() {
         currencyService.updateCurrenciesInDb(currencyService.getCurrenciesFromApi());
         currencyService.checkChangeCurrencyPrice();
