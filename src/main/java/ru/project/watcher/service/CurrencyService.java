@@ -93,7 +93,7 @@ public class CurrencyService {
     }
 
     private double moreThen01percent(Currency userCurrency, Currency currentCurrency) {
-        return ((userCurrency.getPrice_usd() / currentCurrency.getPrice_usd()) - 1) * 100;
+        return ((userCurrency.getPriceUsd() / currentCurrency.getPriceUsd()) - 1) * 100;
     }
 
     private void printResult(double result, User user, Currency currency) {

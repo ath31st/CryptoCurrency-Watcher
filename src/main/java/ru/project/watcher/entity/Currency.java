@@ -1,6 +1,7 @@
 package ru.project.watcher.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -22,14 +23,15 @@ public class Currency implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
     private String symbol;
-    private double price_usd;
+    @JsonProperty("price_usd")
+    private double priceUsd;
 
     @Override
     public String toString() {
         return "Currency{" +
                 "id=" + id +
                 ", symbol='" + symbol + '\'' +
-                ", price_usd=" + price_usd +
+                ", priceUsd=" + priceUsd +
                 '}';
     }
 
@@ -38,11 +40,11 @@ public class Currency implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Currency currency = (Currency) o;
-        return Double.compare(currency.price_usd, price_usd) == 0 && Objects.equals(id, currency.id) && Objects.equals(symbol, currency.symbol);
+        return Double.compare(currency.priceUsd, priceUsd) == 0 && Objects.equals(id, currency.id) && Objects.equals(symbol, currency.symbol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, symbol, price_usd);
+        return Objects.hash(id, symbol, priceUsd);
     }
 }
